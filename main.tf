@@ -1,6 +1,6 @@
 terraform {
     backend "gcs" { 
-      bucket  = "terraform-state-jb-cicdproject"
+      bucket  = "terraform-state-bucket-grimoire"
       prefix  = "prod"
     }
 }
