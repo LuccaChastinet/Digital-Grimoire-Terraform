@@ -34,6 +34,8 @@ jobs:
         cat > pipeline.auto.tfvars <<EOF
         region="${{ vars.GCP_REGION }}" 
         project="${{ vars.GCP_PROJECT }}" 
+        echo "region=${{ vars.GCP_REGION }}" >> $GITHUB_ENV
+        echo "project=${{ vars.GCP_PROJECT }}" >> $GITHUB_ENV
         EOF
         
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
@@ -41,6 +43,8 @@ jobs:
       run: terraform init
       env:
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }} 
+        region: ${{ env.GCP_REGION }}
+        project: ${{ env.GCP_PROJECT }}
 
 
     # Generates an execution plan for Terraform
@@ -48,6 +52,8 @@ jobs:
       run: terraform plan -input=false
       env:
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        region: ${{ env.GCP_REGION }}
+        project: ${{ env.GCP_PROJECT }}
 
       # On push to "main", build or change infrastructure according to Terraform configuration files
       # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
@@ -56,3 +62,5 @@ jobs:
       run: terraform apply -auto-approve -input=false
       env:
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        region: ${{ env.GCP_REGION }}
+        project: ${{ env.GCP_PROJECT }}
